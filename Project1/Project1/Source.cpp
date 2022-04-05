@@ -38,6 +38,8 @@ vec3 topLeft(1, 0, 0); // red
 vec3 topRight(0, 0, 1); // blue
 vec3 bottomLeft(0, 1, 0); // green
 vec3 bottomRight(1, 1, 0); // yellow
+vector<vec3> stars(1000);
+double f = SCREEN_HEIGHT / 2;
 
 // --------------------------------------------------------
 // FUNCTION DECLARATIONS
@@ -50,6 +52,8 @@ void Interpolate(vec3 a, vec3 b, vector<vec3>& result);
 void LinearInterpolation();
 void DrawRomanianFlag();
 void DrawRainbow();
+void setStarPositions();
+void DrawStars();
 
 // --------------------------------------------------------
 // FUNCTION DEFINITIONS
@@ -57,7 +61,8 @@ void DrawRainbow();
 int main(int argc, char* argv[])
 {
 
-	
+	setStarPositions();
+
 
 	//LinearInterpolation();
 	screen = InitializeSDL(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -77,6 +82,24 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < s; ++i)
 		cout << result[i] << " "; // Print the result to the terminal
 } */
+
+
+void setStarPositions() {
+	float r,x,y;
+
+	for (int s = 0; s < stars.size(); ++s) {
+		//-1 <= x <= 1
+		x = float(rand()) / float(RAND_MAX);
+		if (rand() % 2 == 0) stars[s].x = x;
+		else stars[s].x = (-1)* x;
+		//-1 <= y <= 1
+		y = float(rand()) / float(RAND_MAX);
+		if (rand() % 2 == 0) stars[s].y = y;
+		else stars[s].y = (-1) * y;
+		// 0 < z <= 1
+		stars[s].z = float(rand()) / float(RAND_MAX);
+	}
+}
 
 void DrawRomanianFlag() {
 
@@ -103,6 +126,11 @@ void DrawRomanianFlag() {
 			PutPixelSDL(screen, x, y, blue);
 		}
 	}
+
+	if (SDL_MUSTLOCK(screen))
+		SDL_UnlockSurface(screen);
+
+	SDL_UpdateRect(screen, 0, 0, 0, 0);
 
 }
 
@@ -158,15 +186,40 @@ void DrawRainbow() {
 			PutPixelSDL(screen, x, y, result[x]);
 		} 
 	}*/
-}
-
-void Draw()
-{
-	//DrawRomanianFlag();
-	DrawRainbow();
 
 	if (SDL_MUSTLOCK(screen))
 		SDL_UnlockSurface(screen);
 
 	SDL_UpdateRect(screen, 0, 0, 0, 0);
+}
+
+
+void DrawStars() {
+	SDL_FillRect(screen, 0, 0);
+	if (SDL_MUSTLOCK(screen))
+		SDL_LockSurface(screen);
+
+	vector<double> v(stars.size());
+	vector<double> u(stars.size());
+	vec3 white(1, 1, 1);;
+	for (size_t s = 0; s < stars.size(); ++s)
+	{
+		u[s] = f * (stars[s].x / stars[s].z) + (SCREEN_WIDTH / 2);
+		v[s] = f * (stars[s].y / stars[s].z) + (SCREEN_HEIGHT / 2);
+
+		PutPixelSDL(screen, u[s], v[s], white);
+	}
+	if (SDL_MUSTLOCK(screen))
+		SDL_UnlockSurface(screen);
+	SDL_UpdateRect(screen, 0, 0, 0, 0);
+}
+
+void Draw()
+{
+	//DrawRomanianFlag();
+	//DrawRainbow();
+	DrawStars();
+
+
+	
 }
