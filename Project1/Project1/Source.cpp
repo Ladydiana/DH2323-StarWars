@@ -40,6 +40,7 @@ vec3 bottomLeft(0, 1, 0); // green
 vec3 bottomRight(1, 1, 0); // yellow
 vector<vec3> stars(1000);
 double f = SCREEN_HEIGHT / 2;
+int t;
 
 // --------------------------------------------------------
 // FUNCTION DECLARATIONS
@@ -47,6 +48,7 @@ double f = SCREEN_HEIGHT / 2;
 void Draw();
 void Interpolate(float a, float b, vector<float>& result);
 void Interpolate(vec3 a, vec3 b, vector<vec3>& result);
+void Update();
 
 
 void LinearInterpolation();
@@ -66,8 +68,11 @@ int main(int argc, char* argv[])
 
 	//LinearInterpolation();
 	screen = InitializeSDL(SCREEN_WIDTH, SCREEN_HEIGHT);
+	t = SDL_GetTicks();
+
 	while (NoQuitMessageSDL())
 	{
+		Update();
 		Draw();
 	}
 	SDL_SaveBMP(screen, "screenshot.bmp");
@@ -82,6 +87,23 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < s; ++i)
 		cout << result[i] << " "; // Print the result to the terminal
 } */
+
+void Update() {
+	//compute the time since the last update
+	int t2 = SDL_GetTicks();
+	float dt = float(t2 - t);
+	t = t2;
+
+	for (int s = 0; s < stars.size(); ++s)
+	{
+		// Add code for update of stars
+		if (stars[s].z <= 0)
+			stars[s].z += 1;
+		if (stars[s].z > 1)
+			stars[s].z -= 1;
+	}
+
+}
 
 
 void setStarPositions() {
