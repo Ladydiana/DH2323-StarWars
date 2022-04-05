@@ -38,8 +38,10 @@ vec3 topLeft(1, 0, 0); // red
 vec3 topRight(0, 0, 1); // blue
 vec3 bottomLeft(0, 1, 0); // green
 vec3 bottomRight(1, 1, 0); // yellow
+vec3 color;
 vector<vec3> stars(1000);
 double f = SCREEN_HEIGHT / 2;
+double V = 0.00009f;
 int t;
 
 // --------------------------------------------------------
@@ -96,11 +98,15 @@ void Update() {
 
 	for (int s = 0; s < stars.size(); ++s)
 	{
-		// Add code for update of stars
+		// According to Formula 1
+		stars[s].z = stars[s].z - V * dt;
+
 		if (stars[s].z <= 0)
 			stars[s].z += 1;
 		if (stars[s].z > 1)
 			stars[s].z -= 1;
+
+		color = 0.2f * vec3(1, 1, 1) / (stars[s].z * stars[s].z);
 	}
 
 }
@@ -229,7 +235,8 @@ void DrawStars() {
 		u[s] = f * (stars[s].x / stars[s].z) + (SCREEN_WIDTH / 2);
 		v[s] = f * (stars[s].y / stars[s].z) + (SCREEN_HEIGHT / 2);
 
-		PutPixelSDL(screen, u[s], v[s], white);
+		//PutPixelSDL(screen, u[s], v[s], white);
+		PutPixelSDL(screen, u[s], v[s], color);
 	}
 	if (SDL_MUSTLOCK(screen))
 		SDL_UnlockSurface(screen);
