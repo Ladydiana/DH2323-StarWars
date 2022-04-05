@@ -8,12 +8,18 @@
 // * Linear interpolation
 // * glm::vec3 and std::vector
 
+#ifdef _DEBUG 
+#define _ITERATOR_DEBUG_LEVEL 0 
+#include <crtdbg.h> 
+#endif
 #include "SDL.h"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <vector>
 #include "SDLauxiliary.h"
 #include <algorithm>
+
+
 
 //Visual Studio won't compile without these 2 lines below.
 FILE _iob[] = { *stdin, *stdout, *stderr };
@@ -110,9 +116,7 @@ void Interpolate(vec3 a, vec3 b, vector<vec3>& result){
 	double gStep = (b.g - a.g) / (sz - 1);
 	double bStep = (b.b - a.b) / (sz - 1);
 
-	//for (int x = 0; x < sz; ++x) {}
 
-	//result[i].r = a.r + distance_r*i;
 	//std::vector<float> step(sz);
 	//std::generate_n(std::back_inserter(step), size, []() { static double d = 0; return d += rStep; });
 
@@ -131,18 +135,35 @@ void DrawRainbow() {
 	//Height interporlation
 	vector<vec3> resultLH(SCREEN_HEIGHT);
 	vector<vec3> resultRH(SCREEN_HEIGHT);
+	vector<vec3> result(SCREEN_WIDTH);
+	
 
 	Interpolate(topLeft, bottomLeft, resultLH);
-	Interpolate(topRight, bottomRight, resultRH);
+	Interpolate (topRight, bottomRight, resultRH);
 
+	for (int y = 0; y < SCREEN_HEIGHT; ++y) {
 
-	
+		// Interpolate width row by row
+		Interpolate(resultLH[y], resultRH[y], result);
+
+		for (int x = 0; x < SCREEN_WIDTH; ++x)
+		{
+			PutPixelSDL(screen, x, y, result[x]);
+		}
+	}
+
+	/*for (int y = 0; y < SCREEN_HEIGHT; ++y) {
+		for (int x = 0; x < SCREEN_WIDTH; ++x)
+		{
+			PutPixelSDL(screen, x, y, result[x]);
+		} 
+	}*/
 }
 
 void Draw()
 {
-	DrawRomanianFlag();
-	
+	//DrawRomanianFlag();
+	DrawRainbow();
 
 	if (SDL_MUSTLOCK(screen))
 		SDL_UnlockSurface(screen);
