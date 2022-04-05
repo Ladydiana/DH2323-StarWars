@@ -14,6 +14,7 @@
 #endif
 #include "SDL.h"
 #include <iostream>
+#include <random>
 #include <glm/glm.hpp>
 #include <vector>
 #include "SDLauxiliary.h"
@@ -41,7 +42,7 @@ vec3 bottomRight(1, 1, 0); // yellow
 vec3 color;
 vector<vec3> stars(1000);
 double f = SCREEN_HEIGHT / 2;
-double V = 0.00009f;
+double V = 0.0002f;
 int t;
 
 // --------------------------------------------------------
@@ -67,6 +68,8 @@ int main(int argc, char* argv[])
 
 	setStarPositions();
 
+	
+
 
 	//LinearInterpolation();
 	screen = InitializeSDL(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -90,6 +93,7 @@ int main(int argc, char* argv[])
 		cout << result[i] << " "; // Print the result to the terminal
 } */
 
+
 void Update() {
 	//compute the time since the last update
 	int t2 = SDL_GetTicks();
@@ -106,7 +110,7 @@ void Update() {
 		if (stars[s].z > 1)
 			stars[s].z -= 1;
 
-		color = 0.2f * vec3(1, 1, 1) / (stars[s].z * stars[s].z);
+		
 	}
 
 }
@@ -236,12 +240,14 @@ void DrawStars() {
 		v[s] = f * (stars[s].y / stars[s].z) + (SCREEN_HEIGHT / 2);
 
 		//PutPixelSDL(screen, u[s], v[s], white);
+		color = 0.2f * vec3(1, 1, 1) / (stars[s].z * stars[s].z);
 		PutPixelSDL(screen, u[s], v[s], color);
 	}
 	if (SDL_MUSTLOCK(screen))
 		SDL_UnlockSurface(screen);
 	SDL_UpdateRect(screen, 0, 0, 0, 0);
 }
+
 
 void Draw()
 {
