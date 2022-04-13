@@ -252,8 +252,8 @@ void DrawStars() {
 void Draw()
 {
 	//DrawRomanianFlag();
-	DrawRainbow();
-	//DrawStars();
+	//DrawRainbow();
+	DrawStars();
 
 
 	
