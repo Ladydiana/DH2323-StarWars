@@ -1,6 +1,7 @@
 # DH2323-StarWars
 
 C++ computer graphics implementation of a moving starfield (Star Wars intro sequence) using SDL and GLM libraries.
+
 Also featuring linear/bilinear interpolation to produce a rainbow effect and pinhole camera projection.
 
 
